@@ -1,5 +1,8 @@
 import time
 from collections import deque
+from functools import partial
+import timeit
+from matplotlib import pyplot
 
 
 def basicRecursive(n):
@@ -95,41 +98,28 @@ def graphBFS(n):
     return count
 
 
-# Helper function to measure runtime
+if __name__ == '__main__':
+    maxN = 13
+    functions = [basicRecursive, uniqueArrays,
+                 linear, linear2, stackSol, graphDFS, graphBFS]
+    functions = [basicRecursive, graphBFS, graphDFS, uniqueArrays, stackSol]
+    timings = [[] for _ in range(len(functions))]
+    for n in range(1, maxN):
+        print(f"n = {n}")
+        for i in range(len(functions)):
+            func = functions[i]
+            timeTaken = min(timeit.Timer(partial(func, n)).repeat(5, 1000))
+            print(f"function = {func.__name__}, timeTaken = {timeTaken}")
+            timings[i].append(timeTaken)
+
+    for i in range(len(functions)):
+        pyplot.plot(range(1, maxN), timings[i], label=functions[i].__name__)
+    pyplot.legend()
+    pyplot.show()
+
+
 def measure_runtime(func, n):
     start_time = time.perf_counter()
     result = func(n)
     end_time = time.perf_counter()
     return end_time - start_time, result
-
-
-function_timings = {}
-
-# functions = [basicRecursive, uniqueArrays, buildUpFib, stackSol, graphSol]
-functions = [basicRecursive, graphBFS, graphDFS]
-# to store the running times corresponding to each function
-times = [0 for _ in functions]
-runs = 10000
-
-for _ in range(runs):
-    for n in range(20):
-        for i in range(len(functions)):
-            func = functions[i]
-            time_taken, _ = measure_runtime(func, n)
-            times[i] += time_taken
-
-for i in range(len(functions)):
-    func = functions[i]
-    # Average running time per run
-    function_timings[func.__name__] = times[i] / runs
-
-# Sort the functions by their average time in ascending order
-sorted_functions = sorted(function_timings.items(),
-                          key=lambda item: item[1])
-
-min_time = sorted_functions[0][1] * 1000
-
-# Print the sorted timings
-for func_name, timing in sorted_functions:
-    timing = timing * 1000
-    print(f'{func_name}: Average execution time over all n = {timing:.3f}ms, which is {timing / min_time:.3f}x slower than the fastest one.')
