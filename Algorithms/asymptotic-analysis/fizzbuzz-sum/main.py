@@ -1,3 +1,8 @@
+import timeit
+from matplotlib import pyplot
+from functools import partial
+
+
 def fizzbuzzSumLinear(n):
     sum = 0
     for i in range(1, n + 1):
@@ -19,11 +24,29 @@ def apSum(a, d, n):
     return (internal * n) // 2
 
 
-if __name__ == "__main__":
-    print("Enter the value of n")
-    n = int(input())
+# if __name__ == "__main__":
+#     print("Enter the value of n")
+#     n = int(input())
 
-    linear = fizzbuzzSumLinear(n)
-    constant = fizzbuzzSumConstant(n)
-    assert linear == constant
-    print(f"Linear: {linear}, Constant: {constant}")
+#     linear = fizzbuzzSumLinear(n)
+#     constant = fizzbuzzSumConstant(n)
+#     assert linear == constant
+#     print(f"Linear: {linear}, Constant: {constant}")
+
+if __name__ == '__main__':
+    maxN = 20
+    repeat = 10
+    runs = 1000
+
+    linTimings = []
+    constTimings = []
+    for n in range(1, maxN):
+        linTiming = min(timeit.Timer(partial(fizzbuzzSumLinear, n)).repeat(repeat, runs))
+        constTiming = min(timeit.Timer(partial(fizzbuzzSumConstant, n)).repeat(repeat, runs))
+        linTimings.append(linTiming)
+        constTimings.append(constTiming)
+
+    pyplot.plot(range(1, maxN), linTimings, label='linear')
+    pyplot.plot(range(1, maxN), constTimings, label='constant')
+    pyplot.legend()
+    pyplot.show()
