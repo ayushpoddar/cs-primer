@@ -1,0 +1,2 @@
+## Problem statement
+In this problem, you will practice looking for opportunities for divide and conquer, by applying the technique to the problem of fast exponentiation. Say you wished to raise a number to the power of an integer n... the naive approach would require O(n) many multiplications. By grouping together our multiplications in a clever way, we can achieve a substantially better running time.
