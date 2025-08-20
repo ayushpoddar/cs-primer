@@ -1,3 +1,5 @@
 .direnv
 Computer-Systems/.DS_Store
 .DS_Store
+.aider.chat.history.md
+.aider.input.history
